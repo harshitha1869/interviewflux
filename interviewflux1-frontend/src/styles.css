@@ -1,0 +1,73 @@
+/* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background-color: #f5f6fa;
+  color: #333;
+}
+
+/* Custom Snackbar Styles */
+.success-snack {
+  background: #27ae60 !important;
+  color: white !important;
+
+  .mat-simple-snackbar-action {
+    color: white !important;
+  }
+}
+
+.error-snack {
+  background: #e74c3c !important;
+  color: white !important;
+
+  .mat-simple-snackbar-action {
+    color: white !important;
+  }
+}
+
+/* Global card elevation */
+.mat-card {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Table styles */
+.mat-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mat-header-row {
+  background: #f8f9ff;
+}
+
+.mat-header-cell {
+  font-weight: 700;
+  color: #0d1b4b;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.mat-row:hover {
+  background: #f0f4ff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a3a8f;
+  border-radius: 3px;
+}

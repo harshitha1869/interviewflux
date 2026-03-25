@@ -1,0 +1,658 @@
+<div class="dash-root">
+
+  <!-- ═══════════════════════════════════
+       BOOKING CONFIRMATION OVERLAY
+  ═══════════════════════════════════ -->
+  <div class="overlay" *ngIf="showConfirmation" (click)="closeConfirmation()">
+    <div class="confirm-card" (click)="$event.stopPropagation()">
+      <div class="confirm-glow"></div>
+
+      <div class="confirm-check-wrap">
+        <div class="confirm-ring"></div>
+        <div class="confirm-check-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#05091a" stroke-width="3" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+      </div>
+
+      <h2 class="confirm-title">Booking Confirmed!</h2>
+      <p class="confirm-sub">Your interview slot has been successfully reserved.</p>
+
+      <div class="confirm-rows" *ngIf="confirmedSlot">
+        <div class="confirm-row">
+          <div class="cr-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <span class="cr-label">Interviewer</span>
+          <span class="cr-val">{{(confirmedSlot.interviewerId) }}</span>
+        </div>
+        <div class="confirm-row">
+          <div class="cr-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <span class="cr-label">Date &amp; Time</span>
+          <span class="cr-val">{{ formatTimeLong(confirmedSlot.slotTime || '') }}</span>
+
+        </div>
+        <div class="confirm-row">
+          <div class="cr-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <span class="cr-label">Slot ID</span>
+          <span class="cr-val">#{{ confirmedSlot!.id }}</span>
+        </div>
+        <div class="confirm-row">
+          <div class="cr-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <span class="cr-label">Status</span>
+          <span class="status-pill confirmed"><span class="pill-dot"></span> Confirmed</span>
+        </div>
+      </div>
+
+      <div class="info-note" style="margin:20px 0 0; text-align:left">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <code>POST /slots/book/{{ confirmedSlot?.id }}</code>
+        <span style="color:rgba(255,255,255,0.25)">Booking saved via JWT</span>
+      </div>
+
+      <button class="btn-primary full-w btn-lg" style="margin-top:20px" (click)="closeConfirmation()">
+        View My Bookings →
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       BOOK SLOT MODAL
+  ═══════════════════════════════════ -->
+  <div class="overlay" *ngIf="showBookModal" (click)="closeBookModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-hdr">
+        <div class="panel-icon" style="width:42px;height:42px;border-radius:10px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Confirm Booking</h3>
+          <p class="modal-sub">Review slot details before confirming</p>
+        </div>
+        <button class="modal-close" (click)="closeBookModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div *ngIf="selectedSlot">
+        <div class="modal-slot-preview">
+          <div class="msp-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+              <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            </svg>
+          </div>
+          <div class="msp-info">
+            <div class="msp-name">Interviewer #{{ selectedSlot.interviewerId }}</div>
+            <div class="msp-time">{{ formatTimeLong(selectedSlot.slotTime || '') }}</div>
+            <div class="msp-id">Slot ID · {{ selectedSlot.id }}</div>
+          </div>
+          <span class="status-pill"><span class="pill-dot"></span> Available</span>
+        </div>
+
+        <div class="modal-note" style="margin-bottom:20px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          This action cannot be undone. Slot will be marked <strong>BOOKED</strong> immediately.
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-primary" style="flex:2"
+                [attr.disabled]="bookingId !== null ? true : null"
+                (click)="confirmBook()">
+          <ng-container *ngIf="bookingId === null">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Yes, Book This Slot
+          </ng-container>
+          <ng-container *ngIf="bookingId !== null">
+            <span class="spin-sm"></span> Booking…
+          </ng-container>
+        </button>
+        <button class="btn-ghost modal-cancel" (click)="closeBookModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       SIDEBAR — exact admin structure
+  ═══════════════════════════════════ -->
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+
+    <div class="sb-bg">
+      <div class="sb-bg-grad"></div>
+      <div class="sb-grid"></div>
+      <div class="sb-glow g1"></div>
+      <div class="sb-glow g2"></div>
+    </div>
+
+    <!-- Brand — with lightning bolt logo -->
+    <div class="sb-brand">
+      <a class="brand">
+        <div class="brand-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+        </div>
+        <span class="brand-name" *ngIf="!sidebarCollapsed">Interview<strong>Flux</strong></span>
+      </a>
+      <div class="brand-badge" *ngIf="!sidebarCollapsed">
+        <span class="badge-dot"></span> USER
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sb-nav">
+      <span class="nav-label" *ngIf="!sidebarCollapsed">MY PORTAL</span>
+
+      <button class="nav-item" [class.active]="activeSection==='slots'" (click)="setSection('slots')">
+        <div class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <span *ngIf="!sidebarCollapsed">Available Slots</span>
+        <span class="nav-count green" *ngIf="!sidebarCollapsed && availableSlots.length">{{ availableSlots.length }}</span>
+      </button>
+
+      <button class="nav-item" [class.active]="activeSection==='bookings'" (click)="setSection('bookings')">
+        <div class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <span *ngIf="!sidebarCollapsed">My Bookings</span>
+        <span class="nav-count" *ngIf="!sidebarCollapsed && myBookings.length">{{ myBookings.length }}</span>
+      </button>
+
+      <button class="nav-item" [class.active]="activeSection==='profile'" (click)="setSection('profile')">
+        <div class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <span *ngIf="!sidebarCollapsed">My Profile</span>
+      </button>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sb-footer">
+      <div class="sb-user" *ngIf="!sidebarCollapsed">
+        <div class="sb-avatar">{{ username.charAt(0).toUpperCase() }}</div>
+        <div class="sb-user-info">
+          <span class="sb-username">{{ username }}</span>
+          <span class="sb-role">Candidate</span>
+        </div>
+      </div>
+      <div class="sb-avatar sb-avatar-sm" *ngIf="sidebarCollapsed">{{ username.charAt(0).toUpperCase() }}</div>
+      <button class="sb-logout" (click)="logout()" title="Logout">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- ═══════════════════════════════════
+       MAIN AREA — exact admin structure
+  ═══════════════════════════════════ -->
+  <div class="main-wrap">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" (click)="sidebarCollapsed = !sidebarCollapsed">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6"  x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <div class="topbar-breadcrumb">
+          <span class="bc-root">InterviewFlux</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+          <span class="bc-current" *ngIf="activeSection==='slots'">Available Slots</span>
+          <span class="bc-current" *ngIf="activeSection==='bookings'">My Bookings</span>
+          <span class="bc-current" *ngIf="activeSection==='profile'">My Profile</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-endpoint" *ngIf="activeSection==='slots'">
+          <code>GET /slots</code>
+        </div>
+        <div class="topbar-endpoint" *ngIf="activeSection==='bookings'">
+          <code>GET /slots/my-bookings</code>
+        </div>
+        <div class="topbar-endpoint" *ngIf="activeSection==='profile'">
+          <code>GET /auth/me</code>
+        </div>
+        <div class="topbar-role">
+          <span class="role-dot"></span> USER
+        </div>
+        <div class="topbar-user">
+          <div class="topbar-avatar">{{ username.charAt(0).toUpperCase() }}</div>
+          {{ username }}
+        </div>
+      </div>
+    </header>
+
+    <!-- Page content -->
+    <div class="page-content">
+
+      <!-- ═══════════════════════════
+           SECTION: AVAILABLE SLOTS
+      ═══════════════════════════ -->
+      <div *ngIf="activeSection==='slots'" class="fade-in">
+
+        <!-- Page heading -->
+        <div class="page-heading">
+          <div class="ph-left">
+            <div class="ph-badge"><span class="badge-dot"></span> Available Now</div>
+            <h1>Available Slots</h1>
+            <p>Browse and book your upcoming interview appointments</p>
+          </div>
+          <div class="ph-pills">
+            <span class="page-endpoint">GET /slots</span>
+          </div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stat-grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="stat-card">
+            <div class="stat-card-bg blue-bg"></div>
+            <div class="stat-icon blue-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div class="stat-body">
+              <div class="stat-num">{{ availableSlots.length }}</div>
+              <div class="stat-label">Open Slots</div>
+            </div>
+            <div class="stat-bar"><div class="stat-bar-fill cyan-fill" [style.width.%]="100"></div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-bg green-bg"></div>
+            <div class="stat-icon green-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <div class="stat-body">
+              <div class="stat-num green">{{ myBookings.length }}</div>
+              <div class="stat-label">My Bookings</div>
+            </div>
+            <div class="stat-bar"><div class="stat-bar-fill green-fill" [style.width.%]="100"></div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-bg cyan-bg"></div>
+            <div class="stat-icon cyan-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <div class="stat-body">
+              <div class="stat-num cyan">JWT</div>
+              <div class="stat-label">Auth Method</div>
+            </div>
+            <div class="stat-bar"><div class="stat-bar-fill cyan-fill" style="width:100%"></div></div>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="loadingSlots" class="panel-loading">
+          <div class="spin"></div>
+          <span>Loading available slots…</span>
+        </div>
+
+        <!-- Empty -->
+        <div *ngIf="!loadingSlots && availableSlots.length === 0" class="panel-empty tall">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="opacity:0.2;margin-bottom:8px">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <strong style="color:white;font-size:16px">No slots available</strong>
+          <p>There are no open interview slots at the moment.<br>Please check back later.</p>
+        </div>
+
+        <!-- Slot cards grid -->
+        <div class="slots-grid" *ngIf="!loadingSlots && availableSlots.length > 0">
+          <div class="slot-card" *ngFor="let s of availableSlots">
+            <div class="slot-card-strip"></div>
+            <div class="slot-card-body">
+              <div class="slot-card-hdr">
+                <div class="slot-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                  </svg>
+                </div>
+                <span class="status-pill"><span class="pill-dot"></span> Available</span>
+              </div>
+              <div class="slot-title">{{ s.company }}</div>
+              <div class="slot-role">{{ s.role }}</div>
+              <div class="slot-title">Interviewer #{{ s.interviewerId }}</div>
+              <div class="slot-time-row">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                {{ formatTime(s.slotTime || '') }}
+              </div>
+              <div class="slot-meta">
+                <span class="slot-id-tag">Slot #{{ s.id }}</span>
+                <span class="slot-api-hint">POST /slots/book/{{ s.id }}</span>
+              </div>
+            </div>
+            <div class="slot-card-foot">
+              <button class="btn-primary full-w"
+                      [attr.disabled]="bookingId !== null ? true : null"
+                      (click)="openBookModal(s)">
+                <ng-container *ngIf="bookingId !== s.id">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                  </svg>
+                  Book This Slot
+                </ng-container>
+                <ng-container *ngIf="bookingId === s.id">
+                  <span class="spin-sm"></span> Booking…
+                </ng-container>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ═══════════════════════════
+           SECTION: MY BOOKINGS
+      ═══════════════════════════ -->
+      <div *ngIf="activeSection==='bookings'" class="fade-in">
+
+        <div class="page-heading">
+          <div class="ph-left">
+            <div class="ph-badge"><span class="badge-dot"></span> Confirmed</div>
+            <h1>My Bookings</h1>
+            <p>All your confirmed interview appointments</p>
+          </div>
+          <div class="ph-pills">
+            <span class="status-pill confirmed"><span class="pill-dot"></span> {{ myBookings.length }} confirmed</span>
+            <span class="page-endpoint">GET /slots/my-bookings</span>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="loadingBookings" class="panel-loading">
+          <div class="spin"></div>
+          <span>Loading your bookings…</span>
+        </div>
+
+        <!-- Empty -->
+        <div *ngIf="!loadingBookings && myBookings.length === 0" class="panel-empty tall">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="opacity:0.2;margin-bottom:8px">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+          </svg>
+          <strong style="color:white;font-size:16px">No bookings yet</strong>
+          <p>You haven't booked any slots yet.</p>
+          <button class="btn-primary btn-sm" (click)="setSection('slots')">Browse Available Slots →</button>
+        </div>
+
+        <!-- Table card -->
+        <div class="table-card" *ngIf="!loadingBookings && myBookings.length > 0">
+          <div class="panel-hdr">
+            <div class="panel-hdr-left">
+              <div class="panel-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              Confirmed Appointments
+            </div>
+            <span class="mini-endpoint">GET /slots/my-bookings · JWT</span>
+          </div>
+          <table class="data-table">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>Interviewer</th>
+              <th>Scheduled Time</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let b of myBookings; let i = index">
+              <td class="col-num">{{ i + 1 }}</td>
+              <td>
+                <div class="col-user">
+
+                  <div class="col-avatar">#{{ b.interviewerId }}</div>
+                  <span>Interviewer #{{ b.interviewerId }}</span>
+                </div>
+              </td>
+              <td class="col-time">{{ formatTime(b.slotTime || '') }}</td>
+              <td>
+                <span class="status-pill confirmed"><span class="pill-dot"></span> Confirmed</span>
+              </td>
+              <td>
+                <button class="btn-danger btn-sm"
+                        (click)="cancelSlot(b.id)">
+                  Cancel
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- ═══════════════════════════
+           SECTION: MY PROFILE
+      ═══════════════════════════ -->
+      <div *ngIf="activeSection==='profile'" class="fade-in">
+
+        <div class="page-heading">
+          <div class="ph-left">
+            <div class="ph-badge"><span class="badge-dot"></span> Candidate</div>
+            <h1>My Profile</h1>
+            <p>Your account details and activity summary</p>
+          </div>
+          <div class="ph-pills">
+            <span class="page-endpoint">GET /auth/me</span>
+          </div>
+        </div>
+
+        <div class="profile-grid">
+
+          <!-- Left: User info card -->
+          <div class="profile-card">
+            <div class="profile-card-hdr">
+              <div class="panel-icon" style="width:36px;height:36px;border-radius:9px">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <div>
+                <h3>Account Info</h3>
+                <p class="form-sub">Your personal details</p>
+              </div>
+            </div>
+            <div class="profile-card-body">
+
+              <div class="profile-avatar-wrap">
+                <div class="profile-avatar">{{ username.charAt(0).toUpperCase() }}</div>
+                <div class="profile-ring"></div>
+              </div>
+              <div class="profile-name">{{ username }}</div>
+              <div class="profile-role">
+                <span class="profile-dot"></span> {{ userRole }}
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">Username</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  <input class="field-input" type="text" [value]="username" readonly>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">Email</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                  <input class="field-input" type="text" [value]="userEmail || 'Not provided'" readonly>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">Role</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  <input class="field-input" type="text" [value]="userRole" readonly>
+                </div>
+              </div>
+
+              <div class="info-note" style="margin-bottom:20px">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <code>GET /auth/me</code>
+                <span>Returns current user profile via JWT</span>
+              </div>
+
+              <button class="btn-primary btn-danger full-w" (click)="logout()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Sign Out
+              </button>
+
+            </div>
+          </div>
+
+          <!-- Right: Activity card -->
+          <div class="profile-card">
+            <div class="profile-card-hdr">
+              <div class="panel-icon" style="width:36px;height:36px;border-radius:9px">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+              </div>
+              <div>
+                <h3>Activity Summary</h3>
+                <p class="form-sub">Your portal activity at a glance</p>
+              </div>
+            </div>
+            <div class="profile-card-body">
+
+              <div class="activity-list">
+                <div class="activity-item">
+                  <div class="activity-icon blue-act">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                  </div>
+                  <div class="activity-info">
+                    <span class="activity-label">Available Slots</span>
+                    <span class="activity-sub">Open to book right now</span>
+                  </div>
+                  <span class="activity-num">{{ availableSlots.length }}</span>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-icon green-act">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                    </svg>
+                  </div>
+                  <div class="activity-info">
+                    <span class="activity-label">My Bookings</span>
+                    <span class="activity-sub">Confirmed appointments</span>
+                  </div>
+                  <span class="activity-num cyan">{{ myBookings.length }}</span>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-icon cyan-act">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                  </div>
+                  <div class="activity-info">
+                    <span class="activity-label">Auth Method</span>
+                    <span class="activity-sub">JSON Web Token (JWT)</span>
+                  </div>
+                  <span class="activity-num" style="font-size:12px;letter-spacing:0.5px">JWT</span>
+                </div>
+              </div>
+
+              <!-- Quick actions -->
+              <div style="margin-top:28px;border-top:1px solid rgba(255,255,255,0.05);padding-top:20px">
+                <div class="field-label" style="margin-bottom:12px">QUICK ACTIONS</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <button class="btn-primary" (click)="setSection('slots')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    Browse Available Slots
+                  </button>
+                  <button class="btn-ghost" (click)="setSection('bookings')" style="justify-content:center;gap:7px">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    View My Bookings
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

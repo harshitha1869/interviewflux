@@ -1,0 +1,207 @@
+<div class="auth-root">
+
+  <!-- ── LEFT PANEL ── -->
+  <div class="left-panel">
+    <div class="left-bg">
+      <div class="left-grid"></div>
+      <div class="left-glow g1"></div>
+      <div class="left-glow g2"></div>
+    </div>
+
+    <div class="left-content">
+      <!-- Brand -->
+      <a routerLink="/" class="brand">
+        <img src="logo.png" alt="IF" class="brand-logo" onerror="this.style.display='none'">
+        <span class="brand-name">Interview<strong>Flux</strong></span>
+      </a>
+
+      <!-- Centre hero -->
+      <div class="left-hero">
+        <div class="left-badge">
+          <span class="badge-dot"></span> New to InterviewFlux?
+        </div>
+        <h2>Create your<br><span class="left-accent">free account</span><br>in seconds</h2>
+        <p>Register as a USER and instantly access the full slot booking system. No credit card required.</p>
+
+        <!-- Feature checklist -->
+        <ul class="feat-list">
+          <li>
+            <span class="feat-check">✓</span>
+            Browse all available interview slots
+          </li>
+          <li>
+            <span class="feat-check">✓</span>
+            Book slots with one click (pessimistic lock protected)
+          </li>
+          <li>
+            <span class="feat-check">✓</span>
+            View and manage your bookings
+          </li>
+          <li>
+            <span class="feat-check">✓</span>
+            JWT secured — all sessions protected
+          </li>
+        </ul>
+      </div>
+
+      <!-- Role badge -->
+      <div class="role-info">
+        <div class="role-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="#38bdf8" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div>
+          <div class="role-title">Registered as <code>USER</code></div>
+          <div class="role-sub">Role assigned automatically on registration</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT PANEL ── -->
+  <div class="right-panel">
+    <div class="form-card">
+
+      <!-- Header -->
+      <div class="form-header">
+        <div class="form-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+               stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="8.5" cy="7" r="4"/>
+            <line x1="20" y1="8" x2="20" y2="14"/>
+            <line x1="23" y1="11" x2="17" y2="11"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Create Account</h1>
+          <p class="form-sub">Join InterviewFlux as a USER</p>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+
+        <!-- Username -->
+        <div class="field-group">
+          <label class="field-label" for="reg-username">Username</label>
+          <div class="field-wrap">
+            <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input
+              id="reg-username"
+              class="field-input"
+              type="text"
+              formControlName="username"
+              placeholder="Choose a username"
+              autocomplete="username">
+          </div>
+          <span class="field-error"
+                *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.hasError('required')">
+            Username is required
+          </span>
+        </div>
+
+        <!-- Email -->
+        <div class="field-group">
+          <label class="field-label" for="reg-email">Email Address</label>
+          <div class="field-wrap">
+            <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <input
+              id="reg-email"
+              class="field-input"
+              type="email"
+              formControlName="email"
+              placeholder="you@email.com"
+              autocomplete="email">
+          </div>
+          <span class="field-error"
+                *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('email')">
+            Enter a valid email address
+          </span>
+          <span class="field-error"
+                *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('required')">
+            Email is required
+          </span>
+        </div>
+
+        <!-- Password -->
+        <div class="field-group">
+          <label class="field-label" for="reg-password">Password</label>
+          <div class="field-wrap">
+            <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input
+              id="reg-password"
+              class="field-input"
+              [type]="hidePassword ? 'password' : 'text'"
+              formControlName="password"
+              placeholder="Min 6 characters"
+              autocomplete="new-password">
+            <button type="button" class="toggle-pw" (click)="hidePassword = !hidePassword">
+              <svg *ngIf="hidePassword" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+              <svg *ngIf="!hidePassword" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <span class="field-error"
+                *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('minlength')">
+            Password must be at least 6 characters
+          </span>
+          <span class="field-error"
+                *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('required')">
+            Password is required
+          </span>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="submit-btn"
+                [attr.disabled]="(registerForm.invalid || loading) ? true : null">
+
+          <span *ngIf="!loading">Create Account →</span>
+          <span *ngIf="loading" class="loading-state">
+            <span class="spinner"></span> Creating account...
+          </span>
+        </button>
+
+      </form>
+
+      <!-- Footer -->
+      <div class="form-footer">
+        <span>Already have an account?</span>
+        <a routerLink="/login" class="footer-link">Sign in here</a>
+        <span class="footer-sep">·</span>
+        <a routerLink="/" class="footer-link">← Home</a>
+      </div>
+
+      <!-- API hint -->
+      <div class="api-hint">
+        <code>POST /auth/register</code>
+        <span>Role defaults to USER automatically</span>
+      </div>
+
+    </div>
+  </div>
+
+</div>

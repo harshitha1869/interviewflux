@@ -1,0 +1,355 @@
+<div class="dashboard-root">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+    <div class="sb-bg"><div class="sb-grid"></div><div class="sb-glow"></div></div>
+    <div class="sb-brand">
+      <div class="sb-logo-wrap">
+        <img src="logo.png" alt="IF" class="sb-logo" onerror="this.style.display='none'">
+      </div>
+      <div class="sb-brand-text" *ngIf="!sidebarCollapsed">
+        <span class="sb-name">Interview<strong>Flux</strong></span>
+        <span class="sb-sub">Admin Panel</span>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="sb-section-label" *ngIf="!sidebarCollapsed">MAIN</div>
+      <button class="sb-item" [class.active]="activeSection==='dashboard'" (click)="setSection('dashboard')">
+        <div class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </div>
+        <span *ngIf="!sidebarCollapsed">Dashboard</span>
+        <span class="sb-badge" *ngIf="!sidebarCollapsed && slots.length">{{ slots.length }}</span>
+      </button>
+
+      <div class="sb-section-label" *ngIf="!sidebarCollapsed">SLOTS</div>
+      <button class="sb-item" [class.active]="activeSection==='create'" (click)="setSection('create')">
+        <div class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+            <line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/>
+          </svg>
+        </div>
+        <span *ngIf="!sidebarCollapsed">Create Slot</span>
+      </button>
+
+      <button class="sb-item" [class.active]="activeSection==='slots'" (click)="setSection('slots')">
+        <div class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <span *ngIf="!sidebarCollapsed">All Slots</span>
+        <span class="sb-badge orange" *ngIf="!sidebarCollapsed && bookedCount > 0">{{ bookedCount }} booked</span>
+      </button>
+    </nav>
+
+    <div class="sb-footer">
+      <button class="sb-logout" (click)="logout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        <span *ngIf="!sidebarCollapsed">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="collapse-btn" (click)="sidebarCollapsed = !sidebarCollapsed">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <div class="topbar-title">
+          <span *ngIf="activeSection==='dashboard'">Dashboard</span>
+          <span *ngIf="activeSection==='create'">Create Slot</span>
+          <span *ngIf="activeSection==='slots'">All Slots</span>
+          <small *ngIf="activeSection==='dashboard'">Admin Control Panel</small>
+          <small *ngIf="activeSection==='create'">POST /admin/create-slot</small>
+          <small *ngIf="activeSection==='slots'">GET /slots</small>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="role-pill blue-pill"><span class="role-dot blue-dot"></span> ADMIN</div>
+        <div class="user-chip">
+          <div class="user-avatar blue-av">{{ username.charAt(0).toUpperCase() }}</div>
+          <span class="user-name">{{ username }}</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- ── DASHBOARD ── -->
+      <div *ngIf="activeSection==='dashboard'" class="section-fade">
+        <div class="charts-grid">
+
+          <div class="chart-card">
+            <h3>Bookings by Company</h3>
+            <canvas id="companyChart"></canvas>
+          </div>
+
+          <div class="chart-card">
+            <h3>Daily Booking Trend</h3>
+            <canvas id="dailyChart"></canvas>
+          </div>
+
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card sc-blue">
+            <div class="sc-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+              </svg>
+            </div>
+            <div class="sc-body"><div class="sc-num">{{ slots.length }}</div><div class="sc-label">Total Slots</div></div>
+            <div class="sc-bg-icon">📅</div>
+          </div>
+          <div class="stat-card sc-green">
+            <div class="sc-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <div class="sc-body"><div class="sc-num">{{ availableCount }}</div><div class="sc-label">Available</div></div>
+            <div class="sc-bg-icon">✅</div>
+          </div>
+          <div class="stat-card sc-orange">
+            <div class="sc-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div class="sc-body"><div class="sc-num">{{ bookedCount }}</div><div class="sc-label">Booked</div></div>
+            <div class="sc-bg-icon">🔖</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <!-- Recent slots list -->
+          <div class="dash-card">
+            <div class="card-hdr">
+              <div class="card-hdr-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </div>
+              <h3>Recent Slots</h3>
+              <button class="card-hdr-btn" (click)="setSection('slots')">View all →</button>
+            </div>
+            <div *ngIf="loadingSlots" class="loading-state"><div class="spinner"></div></div>
+            <div *ngIf="!loadingSlots && slots.length===0" class="empty-state">
+              <p>No slots yet.</p>
+              <button class="btn-primary btn-sm" (click)="setSection('create')">Create Slot</button>
+            </div>
+            <div class="slot-list" *ngIf="!loadingSlots && slots.length>0">
+              <div class="slot-row" *ngFor="let s of slots.slice(0,5)">
+                <div class="sr-dot" [class.booked]="s.status==='BOOKED'"></div>
+                <div class="sr-info">
+                  <div class="sr-title">Interviewer #{{ s.interviewerId }}</div>
+                  <div class="sr-time">{{ formatSlotTime(s.slotTime || '') }}</div>
+                </div>
+                <span class="status-chip" [class.booked]="s.status==='BOOKED'">
+                  {{ s.status==='BOOKED' ? 'Booked' : 'Available' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick create -->
+          <div class="dash-card">
+            <div class="card-hdr">
+              <div class="card-hdr-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </div>
+              <h3>Quick Create Slot</h3>
+            </div>
+
+            <form [formGroup]="slotForm" (ngSubmit)="createSlot()" class="quick-form">
+
+              <!-- Interviewer -->
+              <div class="field-group">
+                <label class="field-label">Interviewer ID</label>
+                <div class="field-wrap">
+                  <input class="field-input" type="number" formControlName="interviewerId" placeholder="e.g. 1">
+                </div>
+              </div>
+
+              <!-- Company -->
+              <div class="field-group">
+                <label class="field-label">Company</label>
+                <div class="field-wrap">
+                  <input class="field-input" type="text" formControlName="company" placeholder="Amazon / Google">
+                </div>
+              </div>
+
+              <!-- Role -->
+              <div class="field-group">
+                <label class="field-label">Role</label>
+                <div class="field-wrap">
+                  <input class="field-input" type="text" formControlName="role" placeholder="Backend Developer">
+                </div>
+              </div>
+
+              <!-- DateTime -->
+              <div class="field-group">
+                <label class="field-label">Date & Time</label>
+                <div class="field-wrap">
+                  <input class="field-input datetime" type="datetime-local" formControlName="dateTime">
+                </div>
+              </div>
+
+              <button type="submit" class="btn-primary" [attr.disabled]="(slotForm.invalid||loading)?true:null">
+                <span *ngIf="!loading">+ Create Slot</span>
+                <span *ngIf="loading" class="loading-inline">
+      <span class="spinner-sm"></span> Creating...
+    </span>
+              </button>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CREATE SLOT ── -->
+      <div *ngIf="activeSection==='create'" class="section-fade">
+        <div class="page-card">
+          <div class="page-card-hdr">
+            <div class="pch-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div>
+              <h2>Create Interview Slot</h2>
+              <p>Add a new bookable interview slot for candidates</p>
+            </div>
+            <code class="endpoint-tag">POST /admin/create-slot</code>
+          </div>
+
+          <form [formGroup]="slotForm" (ngSubmit)="createSlot()" class="create-form">
+            <div class="form-row">
+              <div class="field-group">
+                <label class="field-label">Interviewer ID</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  <input class="field-input" type="number" formControlName="interviewerId" placeholder="Enter interviewer user ID">
+                </div>
+                <span class="field-error" *ngIf="slotForm.get('interviewerId')?.touched && slotForm.get('interviewerId')?.hasError('required')">
+                  Interviewer ID is required
+                </span>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Date & Time</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                  </svg>
+                  <input class="field-input datetime" type="datetime-local" formControlName="dateTime">
+                </div>
+                <span class="field-error" *ngIf="slotForm.get('dateTime')?.touched && slotForm.get('dateTime')?.hasError('required')">
+                  Date & time is required
+                </span>
+              </div>
+            </div>
+
+            <div class="info-banner">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              Slot will be created with status <strong>AVAILABLE</strong> and sent to <code>/admin/create-slot?interviewerId=...&amp;dateTime=...</code>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary btn-lg" [attr.disabled]="(slotForm.invalid||loading)?true:null">
+                <span *ngIf="!loading">+ Create Interview Slot</span>
+                <span *ngIf="loading" class="loading-inline"><span class="spinner-sm"></span> Creating...</span>
+              </button>
+              <button type="button" class="btn-ghost" (click)="slotForm.reset()">Clear Form</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ── ALL SLOTS ── -->
+      <div *ngIf="activeSection==='slots'" class="section-fade">
+        <div class="page-card">
+          <div class="page-card-hdr">
+            <div class="pch-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div><h2>All Interview Slots</h2><p>Monitor all created slots</p></div>
+            <div class="hdr-stats">
+              <span class="hs-pill green">{{ availableCount }} Available</span>
+              <span class="hs-pill orange">{{ bookedCount }} Booked</span>
+            </div>
+            <code class="endpoint-tag">GET /slots</code>
+          </div>
+
+          <div *ngIf="loadingSlots" class="loading-state"><div class="spinner"></div><span>Loading slots...</span></div>
+
+          <div *ngIf="!loadingSlots && slots.length===0" class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.2;margin:0 auto 16px;display:block">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <p>No slots yet.</p>
+            <button class="btn-primary btn-sm" (click)="setSection('create')">Create First Slot</button>
+          </div>
+
+          <div class="table-wrap" *ngIf="!loadingSlots && slots.length>0">
+            <table class="data-table">
+              <thead>
+              <tr><th>#</th><th>Interviewer ID</th><th>Slot Time</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let s of slots; let i=index">
+                <td class="td-num">{{ i+1 }}</td>
+                <td>
+                  <div class="td-user">
+                    <div class="td-avatar">{{ s.interviewerId }}</div>
+                    <div class="td-name">Interviewer #{{ s.interviewerId }}</div>
+                  </div>
+                </td>
+                <td class="td-time">{{ formatSlotTime(s.slotTime || '') }}</td>
+                <td>
+                    <span class="status-chip" [class.booked]="s.status==='BOOKED'">
+                      <span class="status-dot"></span>
+                      {{ s.status==='BOOKED' ? 'Booked' : 'Available' }}
+                    </span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>

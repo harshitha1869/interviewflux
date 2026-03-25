@@ -1,0 +1,362 @@
+
+<div class="landing-root">
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <img src="logo.png" alt="IF" class="nav-logo" onerror="this.style.display='none'">
+        <span class="nav-wordmark">Interview<strong>Flux</strong></span>
+      </div>
+      <div class="nav-links">
+        <a class="nav-link" routerLink="/login">Sign In</a>
+        <a class="nav-cta" routerLink="/register">Get Started →</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+
+    <!-- Background Effects -->
+    <div class="hero-bg">
+      <div class="grid-overlay"></div>
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+      <div class="glow glow-3"></div>
+    </div>
+
+    <!-- Left: Text Content -->
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Distributed · Secure · Role-Based
+      </div>
+
+      <h1 class="hero-title">
+        Schedule Interviews<br>
+        <span class="title-accent">Without the Chaos</span>
+      </h1>
+
+      <p class="hero-desc">
+        InterviewFlux is a distributed booking platform powered by Spring Boot,
+        NGINX load balancing, JWT authentication, and pessimistic locking —
+        built for teams that mean business.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn-primary" routerLink="/register">
+          <span>Start Booking</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a class="btn-ghost" routerLink="/login">Sign In</a>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">3</span>
+          <span class="stat-label">Spring Boot Instances</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">JWT</span>
+          <span class="stat-label">Token Authentication</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">99.9%</span>
+          <span class="stat-label">System Uptime</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Dashboard Mockup -->
+    <div class="hero-visual">
+      <div class="dashboard-mockup">
+
+        <!-- Browser Chrome -->
+        <div class="mockup-topbar">
+          <div class="mockup-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="mockup-url">localhost:4200/user-dashboard</div>
+        </div>
+
+        <!-- App Body -->
+        <div class="mockup-body">
+
+          <!-- Sidebar -->
+          <div class="mockup-sidebar">
+            <div class="ms-item active">
+              <span class="ms-icon">⬛</span> Dashboard
+            </div>
+            <div class="ms-item">
+              <span class="ms-icon">📅</span> Slots
+            </div>
+            <div class="ms-item">
+              <span class="ms-icon">🔖</span> Bookings
+            </div>
+            <div class="ms-item">
+              <span class="ms-icon">👤</span> Profile
+            </div>
+          </div>
+
+          <!-- Main Content -->
+          <div class="mockup-main">
+            <div class="mockup-cards">
+              <div class="mc mc-blue">
+                <div class="mc-num">7</div>
+                <div class="mc-lbl">Available</div>
+              </div>
+              <div class="mc mc-green">
+                <div class="mc-num">2</div>
+                <div class="mc-lbl">Booked</div>
+              </div>
+              <div class="mc mc-purple">
+                <div class="mc-num">1</div>
+                <div class="mc-lbl">Upcoming</div>
+              </div>
+            </div>
+
+            <div class="mockup-slot-list">
+              <div class="msl-item">
+                <div class="msl-dot green"></div>
+                <div class="msl-info">
+                  <div class="msl-title">Senior Dev Interview</div>
+                  <div class="msl-time">Mar 5 · 10:00 AM · 60 min</div>
+                </div>
+                <div class="msl-chip">Available</div>
+              </div>
+              <div class="msl-item">
+                <div class="msl-dot orange"></div>
+                <div class="msl-info">
+                  <div class="msl-title">Frontend React Role</div>
+                  <div class="msl-time">Mar 6 · 11:30 AM · 45 min</div>
+                </div>
+                <div class="msl-chip booked">Booked</div>
+              </div>
+              <div class="msl-item">
+                <div class="msl-dot green"></div>
+                <div class="msl-info">
+                  <div class="msl-title">DevOps Engineer Screen</div>
+                  <div class="msl-time">Mar 7 · 2:00 PM · 30 min</div>
+                </div>
+                <div class="msl-chip">Available</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating Badges -->
+      <div class="float-badge fb-1">
+        <span class="fb-icon">🔐</span>
+        <div>
+          <div class="fb-title">JWT Secured</div>
+          <div class="fb-sub">Bearer Token Auth</div>
+        </div>
+      </div>
+      <div class="float-badge fb-2">
+        <span class="fb-icon">⚡</span>
+        <div>
+          <div class="fb-title">NGINX Load Balanced</div>
+          <div class="fb-sub">Ports 8081 · 8082 · 8083</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── FEATURES ── -->
+  <section class="features">
+    <div class="features-inner">
+      <div class="section-label">WHY INTERVIEWFLUX</div>
+      <h2 class="section-title">Enterprise-grade booking<br>built for scale</h2>
+
+      <div class="feat-grid">
+
+        <!-- Card 1: JWT (wide) -->
+        <div class="feat-card fc-large">
+          <div class="feat-icon-wrap fi-blue">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <h3>JWT Authentication</h3>
+          <p>Stateless, secure Bearer token auth on every protected API call.
+            Tokens are auto-attached via Angular HTTP Interceptor across all requests.</p>
+          <div class="feat-tag">POST /auth/login</div>
+        </div>
+
+        <!-- Card 2: Roles -->
+        <div class="feat-card">
+          <div class="feat-icon-wrap fi-green">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3>3-Tier Role System</h3>
+          <p>Super Admin, Admin, and User — each with dedicated dashboards,
+            route guards, and scoped API access.</p>
+          <div class="role-pills">
+            <span class="rp rp-red">SUPER_ADMIN</span>
+            <span class="rp rp-blue">ADMIN</span>
+            <span class="rp rp-green">USER</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Distributed -->
+        <div class="feat-card">
+          <div class="feat-icon-wrap fi-orange">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <h3>Distributed Backend</h3>
+          <p>3 Spring Boot instances behind NGINX on port 9090
+            for high availability and load distribution.</p>
+        </div>
+
+        <!-- Card 4: Locking -->
+        <div class="feat-card">
+          <div class="feat-icon-wrap fi-purple">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+              <path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/>
+            </svg>
+          </div>
+          <h3>Pessimistic Locking</h3>
+          <p>Database-level locking prevents double-booking race conditions
+            in concurrent slot booking scenarios.</p>
+        </div>
+
+        <!-- Card 5: Feedback -->
+        <div class="feat-card">
+          <div class="feat-icon-wrap fi-cyan">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <h3>Real-time Feedback</h3>
+          <p>Loading spinners, success/error toast notifications,
+            and disabled states for already-booked slots.</p>
+        </div>
+
+        <!-- Card 6: CTA -->
+        <div class="feat-card fc-accent">
+          <div class="feat-cta-content">
+            <h3>Ready to get started?</h3>
+            <p>Create your account in seconds and start booking
+              interview slots immediately.</p>
+            <a class="feat-cta-btn" routerLink="/register">Create Free Account →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="how-it-works">
+    <div class="hiw-inner">
+      <div class="section-label">HOW IT WORKS</div>
+      <h2 class="section-title">Three roles. One platform.</h2>
+
+      <div class="hiw-grid">
+
+        <!-- Step 1 -->
+        <div class="hiw-card">
+          <div class="hiw-num">01</div>
+          <div class="hiw-icon-wrap" style="background: rgba(231,76,60,0.1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                 stroke="#e74c3c" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <h3>Super Admin</h3>
+          <p>Creates and manages Admin accounts. Can block admins,
+            view analytics, and oversee the entire system.</p>
+          <div class="hiw-endpoints">
+            <code>POST /superadmin/create-admin</code>
+            <code>PUT /superadmin/block-admin/&#123;id&#125;</code>
+          </div>
+        </div>
+
+        <div class="hiw-arrow">→</div>
+
+        <!-- Step 2 -->
+        <div class="hiw-card">
+          <div class="hiw-num">02</div>
+          <div class="hiw-icon-wrap" style="background: rgba(56,189,248,0.08)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                 stroke="#38bdf8" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <h3>Admin</h3>
+          <p>Creates interview slots with title, date/time, and duration.
+            Manages the pool of available booking slots.</p>
+          <div class="hiw-endpoints">
+            <code>POST /admin/create-slot</code>
+            <code>GET /slots</code>
+          </div>
+        </div>
+
+        <div class="hiw-arrow">→</div>
+
+        <!-- Step 3 -->
+        <div class="hiw-card">
+          <div class="hiw-num">03</div>
+          <div class="hiw-icon-wrap" style="background: rgba(39,174,96,0.1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                 stroke="#27ae60" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <h3>User</h3>
+          <p>Browses available slots, books interviews with one click,
+            and views their booking history anytime.</p>
+          <div class="hiw-endpoints">
+            <code>GET /slots</code>
+            <code>POST /slots/book/&#123;id&#125;</code>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+
+        
+      </div>
+      <p class="footer-copy">
+        Secure Distributed Booking System · Built with Angular + Spring Boot + NGINX
+      </p>
+    </div>
+  </footer>
+
+</div>

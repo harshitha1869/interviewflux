@@ -1,0 +1,477 @@
+<div class="dashboard-root">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+    <div class="sb-bg">
+      <div class="sb-grid"></div>
+      <div class="sb-glow"></div>
+    </div>
+
+    <!-- Brand -->
+    <div class="sb-brand">
+      <div class="sb-logo-wrap">
+        <img src="logo.png" alt="IF" class="sb-logo" onerror="this.style.display='none'">
+      </div>
+      <div class="sb-brand-text" *ngIf="!sidebarCollapsed">
+        <span class="sb-name">Interview<strong>Flux</strong></span>
+        <span class="sb-sub">Super Admin</span>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sb-nav">
+      <div class="sb-section-label" *ngIf="!sidebarCollapsed">MAIN</div>
+
+      <button class="sb-item" [class.active]="activeSection === 'dashboard'"
+              (click)="setSection('dashboard')">
+        <div class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </div>
+        <span *ngIf="!sidebarCollapsed">Dashboard</span>
+        <span class="sb-badge" *ngIf="!sidebarCollapsed && admins.length">{{ admins.length }}</span>
+      </button>
+
+      <div class="sb-section-label" *ngIf="!sidebarCollapsed">ADMIN MANAGEMENT</div>
+
+      <button class="sb-item" [class.active]="activeSection === 'create'"
+              (click)="setSection('create')">
+        <div class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="8.5" cy="7" r="4"/>
+            <line x1="20" y1="8" x2="20" y2="14"/>
+            <line x1="23" y1="11" x2="17" y2="11"/>
+          </svg>
+        </div>
+        <span *ngIf="!sidebarCollapsed">Create Admin</span>
+      </button>
+
+      <button class="sb-item" [class.active]="activeSection === 'admins'"
+              (click)="setSection('admins')">
+        <div class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <span *ngIf="!sidebarCollapsed">Manage Admins</span>
+        <span class="sb-badge red" *ngIf="!sidebarCollapsed && blockedCount > 0">{{ blockedCount }} blocked</span>
+      </button>
+    </nav>
+
+    <!-- Logout -->
+    <div class="sb-footer">
+      <button class="sb-logout" (click)="logout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        <span *ngIf="!sidebarCollapsed">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main-area">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="collapse-btn" (click)="sidebarCollapsed = !sidebarCollapsed">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <div class="topbar-title">
+          <span *ngIf="activeSection === 'dashboard'">Dashboard</span>
+          <span *ngIf="activeSection === 'create'">Create Admin</span>
+          <span *ngIf="activeSection === 'admins'">Manage Admins</span>
+          <small *ngIf="activeSection === 'dashboard'">Super Admin Control Panel</small>
+          <small *ngIf="activeSection === 'create'">POST /superadmin/create-admin</small>
+          <small *ngIf="activeSection === 'admins'">PUT /superadmin/block-admin/:id</small>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="role-pill">
+          <span class="role-dot"></span> SUPER_ADMIN
+        </div>
+        <div class="user-chip">
+          <div class="user-avatar">{{ username.charAt(0).toUpperCase() }}</div>
+          <span class="user-name">{{ username }}</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+
+      <!-- ── DASHBOARD SECTION ── -->
+      <div *ngIf="activeSection === 'dashboard'" class="section-fade">
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card sc-blue">
+            <div class="sc-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="sc-body">
+              <div class="sc-num">{{ admins.length }}</div>
+              <div class="sc-label">Total Admins</div>
+            </div>
+            <div class="sc-bg-icon">👥</div>
+          </div>
+
+          <div class="stat-card sc-red">
+            <div class="sc-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+              </svg>
+            </div>
+            <div class="sc-body">
+              <div class="sc-num">{{ blockedCount }}</div>
+              <div class="sc-label">Blocked Admins</div>
+            </div>
+            <div class="sc-bg-icon">🚫</div>
+          </div>
+
+          <div class="stat-card sc-green">
+            <div class="sc-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <div class="sc-body">
+              <div class="sc-num">{{ activeCount }}</div>
+              <div class="sc-label">Active Admins</div>
+            </div>
+            <div class="sc-bg-icon">✅</div>
+          </div>
+        </div>
+
+        <!-- Two column -->
+        <div class="two-col">
+
+          <!-- Recent admins -->
+          <div class="dash-card">
+            <div class="card-hdr">
+              <div class="card-hdr-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                </svg>
+              </div>
+              <h3>Recent Admins</h3>
+              <button class="card-hdr-btn" (click)="setSection('admins')">View all →</button>
+            </div>
+
+            <div *ngIf="loadingAdmins" class="loading-state">
+              <div class="spinner"></div>
+            </div>
+
+            <div *ngIf="!loadingAdmins && admins.length === 0" class="empty-state">
+              <p>No admins yet. Create one to get started.</p>
+              <button class="btn-primary btn-sm" (click)="setSection('create')">Create Admin</button>
+            </div>
+
+            <div class="admin-list" *ngIf="!loadingAdmins && admins.length > 0">
+              <div class="admin-row" *ngFor="let a of admins.slice(0, 5)">
+                <!-- ✅ a.name (was a.username) -->
+                <div class="ar-avatar">{{ a.name ? a.name.charAt(0).toUpperCase() : 'A' }}</div>
+                <div class="ar-info">
+                  <div class="ar-name">{{ a.name }}</div>
+                  <div class="ar-email">{{ a.email }}</div>
+                </div>
+                <!-- ✅ a.status === 'BLOCKED' (was a.blocked) -->
+                <span class="status-chip" [class.blocked]="a.status === 'BLOCKED'">
+                  {{ a.status === 'BLOCKED' ? 'Blocked' : 'Active' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick create -->
+          <div class="dash-card">
+            <div class="card-hdr">
+              <div class="card-hdr-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </div>
+              <h3>Quick Create Admin</h3>
+            </div>
+            <form [formGroup]="createAdminForm" (ngSubmit)="createAdmin()" class="quick-form">
+
+              <div class="field-group">
+                <label class="field-label">Name</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  <input class="field-input" type="text" formControlName="name" placeholder="Admin name">
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">Email</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                  <input class="field-input" type="email" formControlName="email" placeholder="admin@company.com">
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">Password</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  <input class="field-input" [type]="hidePassword ? 'password' : 'text'"
+                         formControlName="password" placeholder="Min 6 characters">
+                  <button type="button" class="toggle-pw" (click)="hidePassword = !hidePassword">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <ng-container *ngIf="hidePassword">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </ng-container>
+                      <ng-container *ngIf="!hidePassword">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </ng-container>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-primary"
+                      [attr.disabled]="(createAdminForm.invalid || loading) ? true : null">
+                <span *ngIf="!loading">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                  Create Admin
+                </span>
+                <span *ngIf="loading" class="loading-inline">
+                  <span class="spinner-sm"></span> Creating...
+                </span>
+              </button>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── CREATE ADMIN SECTION ── -->
+      <div *ngIf="activeSection === 'create'" class="section-fade">
+        <div class="page-card">
+          <div class="page-card-hdr">
+            <div class="pch-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="8.5" cy="7" r="4"/>
+                <line x1="20" y1="8" x2="20" y2="14"/>
+                <line x1="23" y1="11" x2="17" y2="11"/>
+              </svg>
+            </div>
+            <div>
+              <h2>Create New Admin</h2>
+              <p>Add a new administrator to the system</p>
+            </div>
+            <code class="endpoint-tag">POST /superadmin/create-admin</code>
+          </div>
+
+          <form [formGroup]="createAdminForm" (ngSubmit)="createAdmin()" class="create-form">
+            <div class="form-row">
+
+              <div class="field-group">
+                <label class="field-label">Admin Name</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  <input class="field-input" type="text" formControlName="name" placeholder="Enter admin name">
+                </div>
+                <span class="field-error"
+                      *ngIf="createAdminForm.get('name')?.touched && createAdminForm.get('name')?.hasError('required')">
+                  Name is required
+                </span>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">Email Address</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                  <input class="field-input" type="email" formControlName="email" placeholder="admin@company.com">
+                </div>
+                <span class="field-error"
+                      *ngIf="createAdminForm.get('email')?.touched && createAdminForm.get('email')?.hasError('email')">
+                  Invalid email address
+                </span>
+              </div>
+
+            </div>
+
+            <div class="form-row half">
+              <div class="field-group">
+                <label class="field-label">Password</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  <input class="field-input" [type]="hidePassword ? 'password' : 'text'"
+                         formControlName="password" placeholder="Min 6 characters">
+                  <button type="button" class="toggle-pw" (click)="hidePassword = !hidePassword">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <ng-container *ngIf="hidePassword">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </ng-container>
+                      <ng-container *ngIf="!hidePassword">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </ng-container>
+                    </svg>
+                  </button>
+                </div>
+                <span class="field-error"
+                      *ngIf="createAdminForm.get('password')?.touched && createAdminForm.get('password')?.hasError('minlength')">
+                  Minimum 6 characters required
+                </span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary btn-lg"
+                      [attr.disabled]="(createAdminForm.invalid || loading) ? true : null">
+                <span *ngIf="!loading">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                  Create Admin Account
+                </span>
+                <span *ngIf="loading" class="loading-inline">
+                  <span class="spinner-sm"></span> Creating...
+                </span>
+              </button>
+              <button type="button" class="btn-ghost" (click)="createAdminForm.reset()">
+                Clear Form
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+      <!-- ── MANAGE ADMINS SECTION ── -->
+      <div *ngIf="activeSection === 'admins'" class="section-fade">
+        <div class="page-card">
+          <div class="page-card-hdr">
+            <div class="pch-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div>
+              <h2>Manage Admins</h2>
+              <p>View and control all admin accounts</p>
+            </div>
+            <div class="hdr-stats">
+              <span class="hs-pill green">{{ activeCount }} Active</span>
+              <span class="hs-pill red">{{ blockedCount }} Blocked</span>
+            </div>
+            <code class="endpoint-tag">GET /superadmin/admins</code>
+          </div>
+
+          <!-- Loading -->
+          <div *ngIf="loadingAdmins" class="loading-state">
+            <div class="spinner"></div>
+            <span>Loading admins...</span>
+          </div>
+
+          <!-- Empty -->
+          <div *ngIf="!loadingAdmins && admins.length === 0" class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.5" style="opacity:0.2;margin:0 auto 16px;display:block">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+            </svg>
+            <p>No admins found. Create one to get started.</p>
+            <button class="btn-primary btn-sm" (click)="setSection('create')">Create First Admin</button>
+          </div>
+
+          <!-- Table -->
+          <div class="table-wrap" *ngIf="!loadingAdmins && admins.length > 0">
+            <table class="data-table">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Admin</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let a of admins; let i = index">
+                <td class="td-num">{{ i + 1 }}</td>
+                <td>
+                  <div class="td-user">
+                    <!-- ✅ a.name (was a.username) -->
+                    <div class="td-avatar">{{ a.name ? a.name.charAt(0).toUpperCase() : 'A' }}</div>
+                    <div class="td-name">{{ a.name }}</div>
+                  </div>
+                </td>
+                <td class="td-email">{{ a.email }}</td>
+                <td>
+                  <!-- ✅ a.status === 'BLOCKED' (was a.blocked) -->
+                  <span class="status-chip" [class.blocked]="a.status === 'BLOCKED'">
+                      <span class="status-dot"></span>
+                    {{ a.status === 'BLOCKED' ? 'Blocked' : 'Active' }}
+                    </span>
+                </td>
+                <td>
+                  <!-- ✅ a.status === 'BLOCKED' (was a.blocked) -->
+                  <button class="action-btn block-btn"
+                          [attr.disabled]="a.status === 'BLOCKED' ? true : null"
+                          (click)="blockAdmin(a.id)"
+                          [title]="a.status === 'BLOCKED' ? 'Already blocked' : 'Block this admin'">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+                    </svg>
+                    {{ a.status === 'BLOCKED' ? 'Blocked' : 'Block' }}
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
