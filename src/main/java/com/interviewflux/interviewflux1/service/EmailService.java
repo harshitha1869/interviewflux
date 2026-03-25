@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    //@Autowired
+    //private JavaMailSender mailSender;
 
     public void sendAdminCredentials(String toEmail, String username, String password) {
 
@@ -25,7 +25,7 @@ public class EmailService {
                         "Please login and change your password."
         );
 
-        mailSender.send(message);
+       // mailSender.send(message);
     }
 
     public void sendSlotBookingConfirmation(
@@ -48,7 +48,7 @@ public class EmailService {
                         "InterviewFlux Team"
         );
 
-        mailSender.send(message);
+        //mailSender.send(message);
     }
     public void sendSlotCancellationEmail(
             String toEmail,
@@ -69,6 +69,6 @@ public class EmailService {
                         "InterviewFlux Team"
         );
 
-        mailSender.send(message);
+        //mailSender.send(message);
     }
 }
