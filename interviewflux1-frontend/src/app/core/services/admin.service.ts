@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 })
 export class AdminService {
 
-  private api = 'http://localhost:9090';
+  private api = 'https://interviewflux-production.up.railway.app';
 
   constructor(private http: HttpClient) {}
   getDashboardStats(){
