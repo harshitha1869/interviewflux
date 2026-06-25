@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://interviewflux.onrender.com'
+  apiUrl: "http://localhost:9090"
 };

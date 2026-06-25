@@ -201,7 +201,7 @@
 .chart-card canvas{
   width:100% !important;
   height:220px !important;
-}
+}a
 
 /* RESPONSIVE */
 @media(max-width:1024px) { .two-col{grid-template-columns:1fr} .stats-grid{grid-template-columns:1fr 1fr} .form-row{grid-template-columns:1fr} }
